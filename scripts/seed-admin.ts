@@ -1,14 +1,17 @@
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+
 import { db } from "@/lib/db";
 import { users } from "@/db/schema";
 import { hash } from "bcryptjs";
+import { eq } from "drizzle-orm";
 
 async function seedAdmin() {
   try {
-    // Check if admin already exists
     const existingAdmin = await db
       .select()
       .from(users)
-      .where(users.email === "admin@example.com")
+      .where(eq(users.email, "admin@example.com"))
       .limit(1);
 
     if (existingAdmin.length === 0) {
@@ -21,14 +24,14 @@ async function seedAdmin() {
         role: "admin",
       });
 
-      console.log("Admin user created successfully");
-      console.log("Email: admin@example.com");
-      console.log("Password: admin123");
+      console.log("✅ Admin user created successfully");
     } else {
-      console.log("Admin user already exists");
+      console.log("ℹ️  Admin user already exists");
     }
   } catch (error) {
-    console.error("Error seeding admin user:", error);
+    console.error("❌ Error seeding admin user:", error);
+  } finally {
+    process.exit(0);
   }
 }
 
