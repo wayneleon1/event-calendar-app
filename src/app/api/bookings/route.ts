@@ -2,25 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { bookings, events } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
+import { authMiddleware } from "@/middleware/auth";
 
 export async function GET(request: NextRequest) {
+  const authResponse = authMiddleware(request);
+  if (authResponse.status !== 200) {
+    return authResponse;
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
+    // Users can only see their own bookings
+    // Admins can see all bookings
+    let userBookings;
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      );
+    if (request.user.role === "admin") {
+      userBookings = await db
+        .select()
+        .from(bookings)
+        .innerJoin(events, eq(bookings.eventId, events.id))
+        .orderBy(events.date);
+    } else {
+      userBookings = await db
+        .select()
+        .from(bookings)
+        .innerJoin(events, eq(bookings.eventId, events.id))
+        .where(eq(bookings.userId, request.user.userId))
+        .orderBy(events.date);
     }
-
-    const userBookings = await db
-      .select()
-      .from(bookings)
-      .innerJoin(events, eq(bookings.eventId, events.id))
-      .where(eq(bookings.userId, parseInt(userId)))
-      .orderBy(events.date);
 
     return NextResponse.json(userBookings);
   } catch (error) {
@@ -33,9 +41,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const authResponse = authMiddleware(request);
+  if (authResponse.status !== 200) {
+    return authResponse;
+  }
+
   try {
     const body = await request.json();
-    const { eventId, userId } = body;
+    const { eventId } = body;
+    const userId = request.user.userId;
 
     // Check if booking already exists
     const existingBooking = await db

@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { events, bookings } from "@/db/schema";
 import { and, eq, gte, lte, inArray, like, or, sql } from "drizzle-orm";
+import { authMiddleware } from "@/middleware/auth";
 
 export async function GET(request: NextRequest) {
   try {
+    const authResponse = authMiddleware(request);
+    if (authResponse.status !== 200) {
+      return authResponse;
+    }
     const { searchParams } = new URL(request.url);
 
     // Build filters
@@ -77,6 +82,19 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const authResponse = authMiddleware(request);
+    if (authResponse.status !== 200) {
+      return authResponse;
+    }
+
+    // Only admins can create events
+    if (request.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Admin access required" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const [newEvent] = await db.insert(events).values(body).returning();
 

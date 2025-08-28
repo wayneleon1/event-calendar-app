@@ -15,6 +15,7 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
+  role: text("role").default("user").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -29,6 +30,7 @@ export const events = pgTable("events", {
   category: text("category").notNull(),
   location: text("location").notNull(),
   maxAttendees: integer("max_attendees").notNull(),
+  currentAttendees: integer("current_attendance").default(0).notNull(),
   createdBy: integer("created_by")
     .references(() => users.id)
     .notNull(),
