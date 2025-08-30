@@ -38,7 +38,7 @@ export default function EventModal({
   const isPastEvent = new Date(event.date) < new Date();
   const isFull = event.currentAttendees >= event.maxAttendees;
   const hasUserBooked =
-    event.currentAttendees > 0 && user?.id === event.createdBy;
+    event.currentAttendees > 0 && user?.id === event.created_by;
 
   const handleBooking = async () => {
     if (!user) return;

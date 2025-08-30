@@ -30,6 +30,7 @@ export const events = pgTable("events", {
   category: text("category").notNull(),
   location: text("location").notNull(),
   maxAttendees: integer("max_attendees").notNull(),
+  currentAttendees: integer("current_attendees").default(0).notNull(),
   created_by: integer("created_by")
     .references(() => users.id)
     .notNull(),
