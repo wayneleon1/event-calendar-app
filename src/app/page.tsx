@@ -77,19 +77,12 @@ export default function HomePage() {
             <div className="flex items-center space-x-4">
               {user ? (
                 <>
-                  <button
-                    onClick={() => setIsCreateModalOpen(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-                  >
-                    <Plus size={20} className="mr-2" />
-                    Create Event
-                  </button>
-                  {/* <Link
+                  <Link
                     href="/dashboard"
                     className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Dashboard
-                  </Link> */}
+                  </Link>
                   {user.role === "admin" && (
                     <Link
                       href="/admin"
@@ -100,7 +93,14 @@ export default function HomePage() {
                   )}
                 </>
               ) : (
-                <div className="space-x-2">
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                  >
+                    <Plus size={20} className="mr-2" />
+                    Create Event
+                  </button>
                   <Link
                     href="/login"
                     className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"

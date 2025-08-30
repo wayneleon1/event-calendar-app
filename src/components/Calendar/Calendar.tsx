@@ -58,7 +58,7 @@ export default function Calendar({ onEventClick, filters }: CalendarProps) {
       if (!eventToUpdate) return;
 
       // Only allow drag and drop for admin users or event creators
-      if (user.role !== "admin" && user.id !== eventToUpdate.createdBy) {
+      if (user.role !== "admin" && user.id !== eventToUpdate.created_by) {
         return;
       }
 
