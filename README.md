@@ -12,7 +12,7 @@
 
 ## 🚀 Live Demo
 
-[🔗 Add your live demo link here after deployment]
+[🔗 https://event-calendar-app-azure.vercel.app]
 
 ---
 
