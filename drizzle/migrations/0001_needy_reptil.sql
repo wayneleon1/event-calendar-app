@@ -1,1 +1,0 @@
-ALTER TABLE "events" ADD COLUMN "current_attendance" integer DEFAULT 0 NOT NULL;

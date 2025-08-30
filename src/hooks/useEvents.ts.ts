@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { Event, NewEvent } from "@/db/schema";
 import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
 
 // Types for API responses
 interface ApiResponse<T> {
@@ -62,22 +63,16 @@ const fetchEvents: QueryFunction<Event[], ["events", EventsFilter]> = async ({
 };
 
 // Create a new event
-const createEvent = async (eventData: NewEvent): Promise<Event> => {
-  const response = await fetch("/api/events", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(eventData),
-  });
+const createEvent = async (eventData: NewEvent) => {
+  try {
+      const response = await axios.post("/api/events", eventData);
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to create event");
+      return response.data;
+
+  } catch (error) {
+    return error;
   }
-
-  return response.json();
-};
+}
 
 // Update an existing event
 const updateEvent = async (event: Event): Promise<Event> => {

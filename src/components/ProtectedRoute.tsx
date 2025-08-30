@@ -26,7 +26,7 @@ export default function ProtectedRoute({
       requiredRole === "admin" &&
       user.role !== "admin"
     ) {
-      router.push("/dashboard");
+      router.push("#");
     }
   }, [user, isLoading, router, requiredRole]);
 

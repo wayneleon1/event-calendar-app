@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/contexts/AuthContext";
-import { X, Calendar, Clock, MapPin, Users, Type } from "lucide-react";
+import { X, Calendar, Clock, MapPin, Users, Type, Shield } from "lucide-react";
 import { useCreateEvent } from "@/hooks/useEvents.ts";
 
 interface CreateEventModalProps {
@@ -83,22 +84,63 @@ export default function CreateEventModal({
 
     setIsSubmitting(true);
     try {
-      await createEvent.mutateAsync({
-        ...data,
+      // Make sure field names match what the API expects
+      const eventData = {
+        title: data.title,
+        description: data.description,
         date: new Date(data.date),
-        endDate: data.endDate ? new Date(data.endDate) : undefined,
-        maxAttendees: Number(data.maxAttendees),
-        createdBy: user.id,
-      });
+        endDate: data.endDate ? new Date(data.endDate) : undefined, // Use endDate (camelCase)
+        category: data.category,
+        location: data.location,
+        maxAttendees: Number(data.maxAttendees), // Use maxAttendees (camelCase)
+        created_by: user.id, // Use created_by (snake_case if required by backend, but camelCase for TS type)
+      };
+
+      console.log("Submitting event data:", eventData);
+      console.log("User object:", user);
+
+      await createEvent.mutateAsync(eventData);
       handleClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create event:", error);
+      alert(error.message || "Failed to create event");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (!isOpen) return null;
+
+  // Check if user is admin
+  const isAdmin = user?.role === "admin";
+
+  if (!isAdmin) {
+    return (
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+        onClick={handleBackdropClick}
+      >
+        <div className="bg-white rounded-2xl max-w-md w-full p-6">
+          <div className="text-center">
+            <Shield size={48} className="mx-auto text-red-500 mb-4" />
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              Admin Access Required
+            </h2>
+            <p className="text-gray-600 mb-4">
+              Only administrators can create events. Please contact an admin if
+              you need to create an event.
+            </p>
+            <button
+              onClick={handleClose}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const startDate = watch("date");
 

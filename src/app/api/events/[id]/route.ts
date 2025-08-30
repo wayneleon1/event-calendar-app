@@ -21,7 +21,7 @@ export async function GET(
         category: events.category,
         location: events.location,
         maxAttendees: events.maxAttendees,
-        createdBy: events.createdBy,
+        createdBy: events.created_by,
         createdAt: events.createdAt,
         updatedAt: events.updatedAt,
         currentAttendees: sql<number>`count(${bookings.id})`,

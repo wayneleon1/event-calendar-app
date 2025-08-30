@@ -30,8 +30,7 @@ export const events = pgTable("events", {
   category: text("category").notNull(),
   location: text("location").notNull(),
   maxAttendees: integer("max_attendees").notNull(),
-  currentAttendees: integer("current_attendance").default(0).notNull(),
-  createdBy: integer("created_by")
+  created_by: integer("created_by")
     .references(() => users.id)
     .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -53,12 +52,10 @@ export const bookings = pgTable(
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (t) => ({
-    // Prevent duplicate bookings
     uniqueBooking: uniqueIndex("unique_booking").on(t.eventId, t.userId),
   })
 );
 
-// Define relations
 export const usersRelations = relations(users, ({ many }) => ({
   events: many(events),
   bookings: many(bookings),
@@ -66,7 +63,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const eventsRelations = relations(events, ({ one, many }) => ({
   creator: one(users, {
-    fields: [events.createdBy],
+    fields: [events.created_by],
     references: [users.id],
   }),
   bookings: many(bookings),
