@@ -6,8 +6,10 @@ import { adminMiddleware } from "@/middleware/auth";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  context: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+  const params = await context.params;
+
   const authResponse = adminMiddleware(request);
   if (authResponse.status !== 200) {
     return authResponse;

@@ -6,15 +6,17 @@ import { adminMiddleware } from "@/middleware/auth";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+
   const authResponse = adminMiddleware(request);
   if (authResponse.status !== 200) {
     return authResponse;
   }
 
   try {
-    const userId = parseInt(params.id);
+    const userId = parseInt(resolvedParams.id);
 
     const [updatedUser] = await db
       .update(users)
