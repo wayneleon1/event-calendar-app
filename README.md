@@ -20,8 +20,8 @@
 
 ### Frontend
 
-- **Next.js 14 (App Router)** – React framework with SSR & SSG
-- **TypeScript** – Strong typing and DX
+- **Next.js 14 (App Router)** – React framework with SSR 
+- **TypeScript** – Strong typing 
 - **Tailwind CSS** – Utility-first responsive styling
 - **React Query (TanStack Query)** – Server state & caching
 - **React Hook Form** – Form handling with validation
@@ -51,7 +51,7 @@
 2. **Database** – Neon PostgreSQL + Drizzle ORM for scalability, safety, and relational structure.
 3. **State Management** – React Query for server state + native React hooks for UI state.
 4. **Authentication** – JWT stored in **HTTP-only cookies** for security.
-5. **UI/UX** – Tailwind CSS, responsive design, dark mode-ready.
+5. **UI/UX** – Tailwind CSS, responsive design
 
 ---
 

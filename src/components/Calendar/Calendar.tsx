@@ -196,7 +196,7 @@ export default function Calendar({ onEventClick, filters }: CalendarProps) {
         </div>
 
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
             {days.map((day) => {
               const dayEvents = filteredEvents.filter((event) =>
                 isSameDay(new Date(event.date), day)
